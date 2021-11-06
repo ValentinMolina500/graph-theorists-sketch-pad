@@ -58,6 +58,18 @@ function GraphCanvas(props) {
     }
   }, [nodes]);
 
+  useEffect(() => {
+    const svgEl = d3.select(svgRef.current);
+
+    svgEl.on("contextmenu", (e) => {
+      e.preventDefault();
+      setCanvasState(CANVAS_STATES.MOVE_NODE);
+    });
+
+    return () => {
+      svgEl.on("contextmenu", null);
+    }
+  }, []);
   /* Redraw the canvas */
   useEffect(() => {
     const svgEl = d3.select(svgRef.current);
@@ -166,8 +178,8 @@ function GraphCanvas(props) {
       .enter().append("circle")
       .on("click", onNodeClick)
       .style("fill", (d) => d.color)
-      .style("stroke", (d) => selectedNode?.id === d.id ? "white" : null)
-      .style("stroke-width", (d) => selectedNode?.id === d.id ? 3 : 0)
+      .style("stroke", (d) => selectedNode?.id === d.id ? "#ffa600" : null)
+      .style("stroke-width", (d) => selectedNode?.id === d.id ? 4 : 0)
       .attr("r", 20)
       .style("cursor", "grab")
       .attr("cx", (d) => d.x)
@@ -176,9 +188,11 @@ function GraphCanvas(props) {
         .on('drag', dragging)
         .on('end', dragEnd)
       )
-      .style("stroke-dasharray", (d) => (selectedNode?.id === d.id && canvasState === CANVAS_STATES.DRAW_EDGE) ? 2 : null)
+      .style("stroke-dasharray", (d) => (selectedNode?.id === d.id && canvasState === CANVAS_STATES.DRAW_EDGE) ? 3: null)
       .attr("cy", (d) => d.y)
       .on("contextmenu", (mouseEvent, datum) => {
+        mouseEvent.stopPropagation();
+        mouseEvent.preventDefault();
         if (canvasState === CANVAS_STATES.MOVE_NODE) {
           setNodes(nodes => nodes.filter(node => {
             return node.id !== datum.id
@@ -216,9 +230,9 @@ function GraphCanvas(props) {
       if (!lineRef.current) {
         lineRef.current = main.append("line")
           .style("fill", "white")
-          .style("stroke", "white")
-          .style("stroke-width", 2)
-          .style("stroke-dasharray", 2)
+          .style("stroke", "#ffa600")
+          .style("stroke-width", 3)
+          .style("stroke-dasharray", 3)
           .attr("x1", selectedNode.x)
           .attr("y1", selectedNode.y)
           .attr("x2", x)

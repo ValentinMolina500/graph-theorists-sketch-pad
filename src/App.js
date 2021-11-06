@@ -9,24 +9,12 @@ import {
   OrderedList,
   ListItem,
   Flex,
-  FormControl,
-  FormLabel,
-  Input,
-  Stack,
   Kbd
 } from '@chakra-ui/react';
 import { v4 as uuidv4 } from 'uuid';
 
 import GraphCanvas from './components/GraphCanvas';
 
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -35,11 +23,6 @@ function getRandomInt(min, max) {
 
 function App() {
 
-  /** @type{React.Ref<HTMLCanvasElement>} */
-  const canvasRef = useRef(null);
-
-  /** @type{React.Ref<CanvasRenderingContext2D>} */
-  const contexRef = useRef(null);
 
   const canvasContainerRef = useRef(null);
   const [nodes, setNodes] = useState([]);
@@ -47,47 +30,37 @@ function App() {
   const [selectedNode, setSelectedNode] = useState(null);
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 0, height: 0 });
 
+  const mousePosRef = useRef({ x: 0, y: 0 });
+
   useEffect(() => {
     /* Scale canvas with screen */
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { height, width } = entry.contentRect;
         setCanvasDimensions({ width, height });
-        // canvas.width = width * 2;
-        // canvas.height = height * 2;
-
-        // canvas.style.width = `${width}px`;
-        // canvas.style.height = `${height}px`;
       }
+
+      /* Track position of mouse for creating new node */
+      document.addEventListener("mousemove", (ev) => {
+        mousePosRef.current = { x: ev.offsetX, y: ev.offsetY };
+      })
     });
 
     resizeObserver.observe(canvasContainerRef.current);
   }, []);
 
-  const drawNode = (node, index) => {
-    const context = contexRef.current;
-
-    context.beginPath();
-    context.fillStyle = node.color;
-    context.arc(node.x, node.y, 28, 0, 2 * Math.PI);
-    context.fill();
-    context.closePath();
-
-    /* Draw the label */
-    context.fillStyle = "white";
-    context.font = "normal 32px Arial"
-    context.fillText(index, node.x - 8, node.y + (48));
-  }
-
   const addNode = () => {
+    const { x, y } = mousePosRef.current;
 
     const newNode = {
       id: uuidv4(),
       label: 'New Node',
-      x: getRandomInt(0, canvasDimensions.width),
-      y: getRandomInt(0, canvasDimensions.height),
+      // x: getRandomInt(0, canvasDimensions.width),
+      // y: getRandomInt(0, canvasDimensions.height),
       color: "#ff6361",
-      index: nodes.length
+      index: nodes.length,
+      x,
+      y
     }
 
     setNodes(nodes.concat(newNode));
@@ -101,46 +74,6 @@ function App() {
 
     setEdges(edges.concat(newEdge));
   }
-
-  const drawEdge = (edge, index) => {
-    const context = contexRef.current;
-    const canvas = canvasRef.current;
-    const fromNode = nodes[edge.from];
-    const toNode = nodes[edge.to];
-
-    context.beginPath();
-    context.strokeStyle = "white";
-    context.lineWidth = 3
-    context.moveTo(fromNode.x, fromNode.y);
-
-    /* This is a loop */
-    if (edge.from === edge.to) {
-
-    } else {
-      context.lineTo(toNode.x, toNode.y);
-      context.stroke();
-    }
-  }
-
-  /* Redraw canvas */
-  // useEffect(() => {
-  //   const context = contexRef.current;
-  //   const canvas = canvasRef.current;
-
-  //   context.save();
-  //   console.log(nodes);
-  //   /* Clear canvas */
-  //   context.fillStyle = "#1A2039";
-  //   context.fillRect(0, 0, canvas.width, canvas.height);
-
-  //   /* Draw the edges */
-  //   edges.forEach(drawEdge);
-
-  //   /* Draw nodes */
-  //   nodes.forEach(drawNode);
-
-  //   context.restore();
-  // }, [nodes, edges, contexRef])
 
   const renderNodeList = () => {
     return nodes.map((node, i) => {
@@ -219,7 +152,7 @@ function App() {
       </GridItem>
 
       {/* Add canvas */}
-      <GridItem ref={canvasContainerRef} overflow="scroll" bg="#1A2039">
+      <GridItem ref={canvasContainerRef} overflow="auto" bg="#1A2039">
         {/* <canvas ref={canvasRef} /> */}
         <GraphCanvas 
           canvasDimensions={canvasDimensions} 
@@ -233,23 +166,6 @@ function App() {
         />
       </GridItem>
 
-      {/* {selectedNode &&
-        <GridItem w="300px" bg="#272B4A" boxShadow="lg">
-          <Box p="1rem">
-            <Heading as="h3" fontSize="1.25rem" color="gray.100">Edit Node</Heading>
-            <Stack>
-              <FormControl id="nodeLabel">
-                <FormLabel fontSize="0.875rem" color="gray.100">Label</FormLabel>
-                <Input fontSize="0.875rem" color="gray.100" value={selectedNode.label} />
-              </FormControl>
-              <FormControl id="nodeId">
-                <FormLabel fontSize="0.875rem" color="gray.100">ID</FormLabel>
-                <Input fontSize="0.875rem" color="gray.100" value={selectedNode.id} />
-              </FormControl>
-            </Stack>
-          </Box>
-        </GridItem>
-      } */}
     </Grid>
   )
 }
