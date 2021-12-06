@@ -11,8 +11,8 @@ const theme = extendTheme({
       variants: {
         control: (props) => ({
           padding: 0,
-          h: "2.25rem",
-          w: "2.25rem",
+          h: "2.5rem",
+          w: "2.5rem",
           bg: props.active ? "#ff6f91" : "white",
           color: props.active ? "gray.50" : "gray.800",
           borderRadius: "0.5rem",

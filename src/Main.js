@@ -144,7 +144,7 @@ function Main() {
           active={toolName === currTool}
           onClick={(e) => { e.stopPropagation(); setCurrTool(toolName) }}
         >
-          <Icon size="1.25rem" />
+          <Icon size="1.5rem" />
         </Button>
       );
     });
@@ -170,10 +170,10 @@ function Main() {
         boxShadow="0px 0px 16px -1px rgba(0, 0, 0, 0.05), 0px 0px 16px -8px rgba(0, 0, 0, 0.05), 0px 0px 16px -12px rgba(0, 0, 0, 0.12), 0px 0px 2px 0px rgba(0, 0, 0, 0.08)"
         top="1rem"
         left="1rem"
-        fontSize="0.75rem"
+        fontSize="0.875rem"
         spacing="0rem"
       >
-        <Text fontSize="0.875rem" fontWeight="semibold">Information</Text>
+        <Text fontSize="1rem" fontWeight="semibold">Information</Text>
         <MathComponent  tex={String.raw`V = ${V}`} />
         <MathComponent  tex={String.raw`E = ${E}`} />
       </Stack>

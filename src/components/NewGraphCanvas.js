@@ -63,7 +63,6 @@ function NewGraphCanvas(props) {
         const adjNode = nodes.get(nodeId);
 
         edgeGroup.append("line")
-        .style("shape-rendering", "crispEdges")
           .style("stroke", "#2D3748")
         .attr("x1", node.x)
         .attr("y1", node.y)
