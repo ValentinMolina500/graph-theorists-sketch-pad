@@ -53,6 +53,7 @@ function NewGraphCanvas(props) {
       .style("fill", node.color)
       .attr("r", 20)
       .style("cursor", "grab")
+     
       .attr("cx", node.x)
       .attr("cy", node.y)
       .attr("stroke-width", 1)
@@ -62,12 +63,12 @@ function NewGraphCanvas(props) {
         const adjNode = nodes.get(nodeId);
 
         edgeGroup.append("line")
+        .style("shape-rendering", "crispEdges")
           .style("stroke", "#2D3748")
-          .style("stroke-width", 1)
         .attr("x1", node.x)
         .attr("y1", node.y)
         .attr("x2", adjNode.x)
-        .attr("y2", adjNode.y)
+        .attr("y2", adjNode.y )
       }
     }
   }, [nodes])

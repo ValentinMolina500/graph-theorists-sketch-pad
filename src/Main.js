@@ -179,9 +179,9 @@ function Main() {
       </Stack>
 
       {/* Controls container */}
-      <Flex justifyContent={"center"} w="100%" pos="absolute" bottom="1rem">
+      <Flex justifyContent={"center"} w="100%" pos="absolute" bottom="1rem" pointerEvents={"none"}>
         {/* Controls */}
-        <HStack
+        <HStack pointerEvents={"all"}
           bg="white"
           padding="0.5rem"
           borderRadius="1rem"

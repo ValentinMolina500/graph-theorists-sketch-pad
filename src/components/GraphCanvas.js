@@ -96,6 +96,7 @@ function GraphCanvas(props) {
     console.log("this is edges", loops);
     svg.selectAll("line")
       .data(edges)
+      .attr("shape-rendering", "crispEdges")
       .enter().append("line")
       .style("fill", "white")
       .style("stroke", "white")
