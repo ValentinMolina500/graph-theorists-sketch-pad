@@ -24,7 +24,7 @@ function GraphCanvas(props) {
     setNodes,
     setEdges,
     addNode,
-    update
+    update,
   } = props;
 
   const [canvasState, setCanvasState] = useState(CANVAS_STATES.MOVE_NODE);
@@ -71,6 +71,7 @@ function GraphCanvas(props) {
       svgEl.on("contextmenu", null);
     }
   }, []);
+
   /* Redraw the canvas */
   useEffect(() => {
     const svgEl = d3.select(svgRef.current);
